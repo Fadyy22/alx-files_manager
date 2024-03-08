@@ -1,9 +1,6 @@
 import { MongoClient } from 'mongodb';
 
 class DBClient {
-  /**
-   * Creates a new DBClient instance.
-   */
   constructor() {
     const host = process.env.DB_HOST || 'localhost';
     const port = process.env.DB_PORT || 27017;
@@ -28,4 +25,5 @@ class DBClient {
 }
 
 const dbClient = new DBClient();
+
 export default dbClient;
