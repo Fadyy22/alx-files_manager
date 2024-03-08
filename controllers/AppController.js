@@ -11,8 +11,8 @@ export default class AppController {
 
   static getStats(req, res) {
     return res.status(200).json({
-      users: dbClient.nbUsers,
-      files: dbClient.nbFiles,
+      users: dbClient.nbUsers(),
+      files: dbClient.nbFiles(),
     });
   }
 }
