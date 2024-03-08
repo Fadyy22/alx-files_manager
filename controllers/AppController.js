@@ -9,10 +9,10 @@ export default class AppController {
     });
   }
 
-  static getStats(req, res) {
+  static async getStats(req, res) {
     return res.status(200).json({
-      users: dbClient.nbUsers(),
-      files: dbClient.nbFiles(),
+      users: await dbClient.nbUsers(),
+      files: await dbClient.nbFiles(),
     });
   }
 }
