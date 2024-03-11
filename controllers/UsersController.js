@@ -21,4 +21,8 @@ export default class UserController {
     });
     return res.status(201).json({ email: newUser.ops[0].email, id: newUser.insertedId });
   }
+
+  static getMe(req, res) {
+    return res.status(200).json({ email: req.user.email, id: req.user._id });
+  }
 }
