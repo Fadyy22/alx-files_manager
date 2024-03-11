@@ -3,6 +3,7 @@ import sha1 from 'sha1';
 
 export default class UserController {
   static postNew(req, res) {
+    console.log(req.body);
     const { email, password } = req.body;
 
     if (!email) {
