@@ -15,6 +15,8 @@ const mountRoutes = (app) => {
   app.get('/disconnect', getUserFromXToken, AuthController.getDisconnect);
 
   app.post('/files', getUserFromXToken, FilesController.postUpload);
+  app.get('/files/:id', getUserFromXToken, FilesController.getShow);
+  app.get('/files', getUserFromXToken, FilesController.getIndex);
 };
 
 export default mountRoutes;

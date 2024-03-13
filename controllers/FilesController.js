@@ -57,4 +57,46 @@ export default class FilesController {
       parentId,
     });
   }
+
+  static async getShow(req, res) {
+    const fileId = req.params.id;
+    const file = await dbClient.client.db('files_manager').collection('files').findOne({
+      _id: ObjectId(fileId),
+      userId: ObjectId(req.user._id)
+    });
+
+    if (!file) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    return res.status(200).json({
+      id,
+      userId,
+      name: file.name,
+      type: file.type,
+      isPublic: file.isPublic,
+      parentId: file.parentId,
+    });
+  }
+
+  static async getIndex(req, res) {
+    const parentId = req.query.parenId || 0;
+    const page = +req.query.page || 0;
+    const MAX_ITEMS = 20;
+    const files = await dbClient.client.db('files_manager').collection('files').aggregate([
+      { $match: { parentId: ObjectId(parentId), userId: ObjectId(req.user._id) } },
+      { $skip: page * MAX_ITEMS },
+      { $limit: MAX_ITEMS },
+      {
+        $project: {
+          id: '$_id',
+          userId: '$userId',
+          name: '$name',
+          type: '$type',
+          isPublic: '$isPublic',
+          parentId: '$parentId',
+        },
+      },
+    ]);
+    return res.status(200).json(files);
+  }
 }
