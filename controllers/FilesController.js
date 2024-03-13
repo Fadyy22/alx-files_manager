@@ -19,7 +19,7 @@ export default class FilesController {
       return res.status(400).json({ error: 'Missing data' });
     }
     if (parentId) {
-      const file = await dbClient.client.db('files_manager')
+      const file = await dbClient.client.db()
         .collection('files')
         .findOne({
           _id: ObjectId(parentId),
@@ -47,7 +47,7 @@ export default class FilesController {
       fs.writeFileSync(filePath, Buffer.from(data, 'base64').toString());
       fileData.localPath = filePath;
     }
-    const file = await dbClient.client.db('files_manager').collection('files').insertOne(fileData);
+    const file = await dbClient.client.db().collection('files').insertOne(fileData);
     return res.status(201).json({
       id: file.insertedId,
       userId: req.user._id,
@@ -60,7 +60,7 @@ export default class FilesController {
 
   static async getShow(req, res) {
     const fileId = req.params.id;
-    const file = await dbClient.client.db('files_manager').collection('files').findOne({
+    const file = await dbClient.client.db().collection('files').findOne({
       _id: ObjectId(fileId),
       userId: ObjectId(req.user._id),
     });
@@ -82,7 +82,7 @@ export default class FilesController {
     const parentId = req.query.parentId || 0;
     const page = +req.query.page || 0;
     const MAX_ITEMS = 20;
-    const files = await dbClient.client.db('files_manager').collection('files').aggregate([
+    const files = await dbClient.client.db().collection('files').aggregate([
       {
         $match: {
           parentId: parentId === 0 ? 0 : ObjectId(parentId),

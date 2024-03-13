@@ -11,11 +11,11 @@ export default class UserController {
     if (!password) {
       return res.status(400).json({ error: 'Missing password' });
     }
-    const user = await dbClient.client.db('files_manager').collection('users').findOne({ email });
+    const user = await dbClient.client.db().collection('users').findOne({ email });
     if (user) {
       return res.status(400).json({ error: 'Already exist' });
     }
-    const newUser = await dbClient.client.db('files_manager').collection('users').insertOne({
+    const newUser = await dbClient.client.db().collection('users').insertOne({
       email,
       password: sha1(password),
     });

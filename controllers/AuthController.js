@@ -20,7 +20,7 @@ export default class AuthController {
     }
     const credentials = decodedToken.split(':');
     const user = await dbClient.client
-      .db('files_manager')
+      .db()
       .collection('users')
       .findOne({ email: credentials[0], password: sha1(credentials[1]) });
 
