@@ -8,7 +8,7 @@ const mountRoutes = (app) => {
   app.get('/stats', AppController.getStats);
 
   app.post('/users', UserController.postNew);
-  app.get('/users/me', UserController.getMe);
+  app.get('/users/me', getUserFromXToken, UserController.getMe);
 
   app.get('/connect', AuthController.getConnect);
   app.get('/disconnect', getUserFromXToken, AuthController.getDisconnect);
