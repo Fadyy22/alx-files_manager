@@ -1,6 +1,7 @@
 import AppController from '../controllers/AppController';
 import UserController from '../controllers/UsersController';
 import AuthController from '../controllers/AuthController';
+import FilesController from '../controllers/FilesController';
 import { getUserFromXToken } from '../utils/auth';
 
 const mountRoutes = (app) => {
@@ -12,6 +13,8 @@ const mountRoutes = (app) => {
 
   app.get('/connect', AuthController.getConnect);
   app.get('/disconnect', getUserFromXToken, AuthController.getDisconnect);
+
+  app.post('/files', getUserFromXToken, FilesController.postUpload);
 };
 
 export default mountRoutes;
