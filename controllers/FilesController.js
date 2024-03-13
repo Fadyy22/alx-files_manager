@@ -47,9 +47,7 @@ export default class FilesController {
       fs.writeFileSync(filePath, Buffer.from(data, 'base64').toString());
       fileData.localPath = filePath;
     }
-    const file = await dbClient.client.db('files_manager').collection('files').insertOne({
-      fileData,
-    });
+    const file = await dbClient.client.db('files_manager').collection('files').insertOne(fileData);
     return res.status(201).json({
       id: file.insertedId,
       userId: req.user._id,
