@@ -83,7 +83,7 @@ export default class FilesController {
     const page = +req.query.page || 0;
     const MAX_ITEMS = 20;
     const files = await dbClient.client.db('files_manager').collection('files').aggregate([
-      { $match: { parentId: ObjectId(parentId), userId: ObjectId(req.user._id) } },
+      { $match: { parentId: parentId ? ObjectId(parentId) : 0, userId: ObjectId(req.user._id) } },
       { $skip: page * MAX_ITEMS },
       { $limit: MAX_ITEMS },
       {
