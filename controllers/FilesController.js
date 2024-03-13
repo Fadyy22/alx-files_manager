@@ -62,7 +62,7 @@ export default class FilesController {
     const fileId = req.params.id;
     const file = await dbClient.client.db('files_manager').collection('files').findOne({
       _id: ObjectId(fileId),
-      userId: ObjectId(req.user._id)
+      userId: ObjectId(req.user._id),
     });
 
     if (!file) {
