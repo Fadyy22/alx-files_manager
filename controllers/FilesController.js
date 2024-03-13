@@ -41,6 +41,7 @@ export default class FilesController {
       isPublic,
       parentId,
     };
+    fs.mkdirSync(path);
     if (type === 'folder') {
       fs.mkdirSync(filePath);
     } else {
