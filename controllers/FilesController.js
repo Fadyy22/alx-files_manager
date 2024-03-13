@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { v4 } from 'uuid';
+import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
 
 export default class FilesController {
@@ -17,12 +18,19 @@ export default class FilesController {
     if (!data && type !== 'folder') {
       return res.status(400).json({ error: 'Missing data' });
     }
-    // if (parentId) {
-
-    // }
-    // if (type === 'folder') {
-
-    // }
+    if (parentId) {
+      const file = await dbClient.client.db('files_manager')
+        .collection('files')
+        .findOne({
+          _id: ObjectId(parentId)
+        });
+      if (!file) {
+        return res.status(400).json({ error: 'Parent not found' });
+      }
+      if (file && file.type !== 'folder') {
+        return res.status(400).json({ error: 'Parent is not a folder' });
+      }
+    }
     const path = process.env.FOLDER_PATH || '/tmp/files_manager/';
     const fileName = v4();
     fs.writeFileSync(path + fileName, Buffer.from(data, 'base64').toString());
