@@ -7,7 +7,7 @@ export default class FilesController {
   static async postUpload(req, res) {
     const TYPES = ['folder', 'file', 'image'];
     const { name, type, data } = req.body;
-    const parentId = req.body.parentId || '0';
+    const parentId = req.body.parentId || 0;
     const isPublic = req.body.isPublic || false;
     if (!name) {
       return res.status(400).json({ error: 'Missing name' });
@@ -54,7 +54,7 @@ export default class FilesController {
       name,
       type,
       isPublic,
-      parentId: parentId === '0' ? 0 : parentId,
+      parentId,
     });
   }
 
