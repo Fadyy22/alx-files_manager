@@ -79,7 +79,7 @@ export default class FilesController {
   }
 
   static async getIndex(req, res) {
-    const parentId = req.query.parenId || 0;
+    const parentId = req.query.parentId || 0;
     const page = +req.query.page || 0;
     const MAX_ITEMS = 20;
     const files = await dbClient.client.db('files_manager').collection('files').aggregate([
