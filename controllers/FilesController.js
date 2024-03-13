@@ -33,18 +33,22 @@ export default class FilesController {
     }
     const path = process.env.FOLDER_PATH || '/tmp/files_manager/';
     const fileName = v4();
-    if (type === 'folder') {
-      fs.mkdirSync(path + fileName);
-    } else {
-      fs.writeFileSync(path + fileName, Buffer.from(data, 'base64').toString());
-    }
-    const file = await dbClient.client.db('files_manager').collection('files').insertOne({
+    const filePath = path + fileName;
+    const fileData = {
       userId: req.user._id,
       name,
       type,
       isPublic,
       parentId,
-      localPath: type === 'file' || type === 'image' ? path + fileName : undefined,
+    };
+    if (type === 'folder') {
+      fs.mkdirSync(filePath);
+    } else {
+      fs.writeFileSync(filePath, Buffer.from(data, 'base64').toString());
+      fileData.localPath = filePath;
+    }
+    const file = await dbClient.client.db('files_manager').collection('files').insertOne({
+      fileData,
     });
     return res.status(201).json({
       id: file.insertedId,
