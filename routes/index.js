@@ -19,6 +19,7 @@ const mountRoutes = (app) => {
   app.get('/files', getUserFromXToken, FilesController.getIndex);
   app.put('/files/:id/publish', getUserFromXToken, FilesController.putPublish);
   app.put('/files/:id/unpublish', getUserFromXToken, FilesController.putUnpublish);
+  app.get('/files/:id/data', getUserFromXToken, FilesController.getFile);
 };
 
 export default mountRoutes;

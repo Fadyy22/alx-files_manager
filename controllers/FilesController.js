@@ -111,13 +111,13 @@ export default class FilesController {
       userId: ObjectId(req.user._id),
       _id: ObjectId(req.params.id),
     };
-    const file = await dbClient.client.db('files_manager')
+    const file = await dbClient.client.db()
       .collection('files')
       .findOne(fileFilter);
     if (!file) {
       return res.status(404).json({ error: 'Not found' });
     }
-    await dbClient.client.db('files_manager')
+    await dbClient.client.db()
       .collection('files')
       .updateOne(fileFilter, { $set: { isPublic: true } });
     return res.status(200).json({
@@ -135,13 +135,13 @@ export default class FilesController {
       userId: ObjectId(req.user._id),
       _id: ObjectId(req.params.id),
     };
-    const file = await dbClient.client.db('files_manager')
+    const file = await dbClient.client.db()
       .collection('files')
       .findOne(fileFilter);
     if (!file) {
       return res.status(404).json({ error: 'Not found' });
     }
-    await dbClient.client.db('files_manager')
+    await dbClient.client.db()
       .collection('files')
       .updateOne(fileFilter, { $set: { isPublic: false } });
     return res.status(200).json({
@@ -152,5 +152,9 @@ export default class FilesController {
       isPublic: false,
       parentId: file.parentId,
     });
+  }
+
+  static async getFile(req, res) {
+    const file = await dbClient.client.db().client;
   }
 }
