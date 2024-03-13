@@ -105,4 +105,52 @@ export default class FilesController {
     ]).toArray();
     return res.status(200).json(files);
   }
+
+  static async putPublish(req, res) {
+    const fileFilter = {
+      userId: ObjectId(req.user._id),
+      _id: ObjectId(req.params.id),
+    };
+    const file = await dbClient.client.db('files_manager')
+      .collection('files')
+      .findOne(fileFilter);
+    if (!file) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    await dbClient.client.db('files_manager')
+      .collection('files')
+      .updateOne(fileFilter, { $set: { isPublic: true } });
+    return res.status(200).json({
+      id: req.params.id,
+      userId: req.user._id,
+      name: file.name,
+      type: file.type,
+      isPublic: true,
+      parentId: file.parentId,
+    });
+  }
+
+  static async putUnpublish(req, res) {
+    const fileFilter = {
+      userId: ObjectId(req.user._id),
+      _id: ObjectId(req.params.id),
+    };
+    const file = await dbClient.client.db('files_manager')
+      .collection('files')
+      .findOne(fileFilter);
+    if (!file) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    await dbClient.client.db('files_manager')
+      .collection('files')
+      .updateOne(fileFilter, { $set: { isPublic: false } });
+    return res.status(200).json({
+      id: req.params.id,
+      userId: req.user._id,
+      name: file.name,
+      type: file.type,
+      isPublic: false,
+      parentId: file.parentId,
+    });
+  }
 }
