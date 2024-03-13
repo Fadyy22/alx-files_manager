@@ -15,6 +15,9 @@ export default class AuthController {
     }
 
     const decodedToken = Buffer.from(authorizationParts[1], 'base64').toString();
+    if (!decodedToken.includes(':')) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
     const credentials = decodedToken.split(':');
     const user = await dbClient.client
       .db('files_manager')
@@ -30,7 +33,7 @@ export default class AuthController {
   }
 
   static async getDisconnect(req, res) {
-    const token = req.headers['X-Token'];
+    const token = req.headers['x-token'];
     await redisClient.del(`auth_${token}`);
     return res.status(204).send();
   }
