@@ -69,8 +69,8 @@ export default class FilesController {
       return res.status(404).json({ error: 'Not found' });
     }
     return res.status(200).json({
-      id,
-      userId,
+      id: fileId,
+      userId: req.user._id,
       name: file.name,
       type: file.type,
       isPublic: file.isPublic,
@@ -96,7 +96,7 @@ export default class FilesController {
           parentId: '$parentId',
         },
       },
-    ]);
+    ]).toArray();
     return res.status(200).json(files);
   }
 }
