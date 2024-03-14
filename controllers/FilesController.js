@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { v4 } from 'uuid';
 import { ObjectId } from 'mongodb';
+import { getUserFromXToken } from '../utils/auth';
 import dbClient from '../utils/db';
 
 export default class FilesController {
@@ -155,6 +156,22 @@ export default class FilesController {
   }
 
   static async getFile(req, res) {
-    const file = await dbClient.client.db().client;
+    const user = await getUserFromXToken(req);
+    const file = await dbClient.client.db()
+      .collection('files')
+      .findOne({ id: ObjectId(req.params.id) });
+    if (!file) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    if (!file.isPublic && (!user || file.userId.toString() !== user._id.toString())) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    if (file.type === 'folder') {
+      return res.status(400).json({ error: 'A folder doesn\'t have content' });
+    }
+    if (!fs.existsSync(file.localPath)) {
+      return res.status(404).josn({ error: 'Not found' });
+    }
+    return res.status(200).sendFile(file.localPath);
   }
 }
